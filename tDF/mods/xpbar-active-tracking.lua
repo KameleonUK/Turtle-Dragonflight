@@ -9,6 +9,9 @@ local module = ShaguTweaks:register({
     enabled = true,
 })
 
+-- added local variable to prevent GetXPExhaustion being called twice
+local PlayerXpExhaustion = GetXPExhaustion("Player")
+
 ShaguTweaks_config = ShaguTweaks_config or {}
 
 module.enable = function(self)
@@ -16,7 +19,7 @@ module.enable = function(self)
     xpbar_watcher_rest:RegisterEvent("PLAYER_UPDATE_RESTING")
     xpbar_watcher_rest:SetScript("OnEvent", function()
         if not xpbar_hide(xpbar) then
-            if IsResting() and (GetXPExhaustion("player") / UnitXPMax("player") ~= 1.5) then
+            if IsResting() and (PlayerXpExhaustion / UnitXPMax("player") ~= 1.5) or PlayerXpExhaustion == 0) then
                 xpbar.text:Show()
                 xpbar_update(xpbar, ShaguTweaks_config["Always show detailed XP"] == 1 and true or nil)
             else
